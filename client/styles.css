@@ -1,0 +1,8 @@
+body {margin: 20px 0px 0px 20px;}
+#grid {margin: 0px; padding: 0px; display: inline-block;}
+.dot {width: 28px; height: 28px; display: inline-block; border-radius: 4px; background-color: #ddd; border: 1px solid #222;}
+.dot.live {background: #777;}
+#info {margin-left: 20px; display: inline-block; vertical-align: top;}
+#buttons {margin-top: 20px;}
+#cellnum, #cellmax {font-size: 48px;}
+#cellmax {margin-top: 20px;}
