@@ -1,10 +1,11 @@
 <!doctype html>
 <html>
 <head>
+	<title>Game of Life</title>
 	<script src="http://game-of-life.jit.su/socket.io/socket.io.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-	<script src="scripts.js?20121221"></script>
-	<link href="styles.css?20121221" rel="stylesheet" />
+	<script src="scripts.js?20121223"></script>
+	<link href="styles.css?20121223" rel="stylesheet" />
 </head>
 <body>
 	<div id="grid">
@@ -12,6 +13,9 @@
 	</div>
 
 	<div id="info">
+		<div id="text">
+			<a href="http://en.wikipedia.org/wiki/Conway's_Game_of_Life" target="_blank">http://en.wikipedia.org/wiki/Conway's_Game_of_Life</a>
+		</div>
 		<div id="cellnum">
 			Live cells: <br />
 			<span id="celllive">000</span> / <span id="cellall">000</span>

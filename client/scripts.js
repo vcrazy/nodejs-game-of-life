@@ -14,6 +14,28 @@ socket = io.connect('http://game-of-life.jit.su/');
 
 $(document).ready(function(){
 // ACTIONS
+	var drag_selection = false;
+
+	$(document).mousedown(function(){
+		drag_selection = true;
+	});
+
+	$(document).mouseup(function(){
+		drag_selection = false;
+	});
+
+	$('.dot').live('mouseenter', function(){
+		cell.mark($(this));
+	});
+
+	$('.dot').live('mouseleave', function(){
+		cell.mark($(this));
+	});
+
+	$('.dot').live('click', function(){
+		cell.click($(this));
+	});
+
 	$('.get_next').click(function(){
 		board.get_next();
 	});
@@ -27,15 +49,12 @@ $(document).ready(function(){
 		auto = false;
 	});
 
-	$('.dot').live('click', function(){
-		cell.click($(this));
-	});
-
 	$('.reset').click(function(){
 		window.location.reload();
 	});
 
 	$('.random').click(function(){
+		$('.auto_stop').click();
 		board.randomize();
 	});
 // END ACTIONS
@@ -50,11 +69,15 @@ $(document).ready(function(){
 // CELL
 	cell.click = function(selected_cell){
 		$(selected_cell).toggleClass('live');
-		board.recalculate_live_dots($(selected_cell).hasClass('live'));
+		board.change_live_dots($(selected_cell).hasClass('live'));
 	};
 
 	cell.change = function(cell, live){
 		$(cell).toggleClass('live', live);
+	};
+
+	cell.mark = function(selected_cell){
+		return drag_selection && $(selected_cell).addClass('live');
 	};
 // END CELL
 
@@ -83,10 +106,12 @@ $(document).ready(function(){
 
 // BOARD
 	board.get_next = function(){
+		board.waiting = + new Date;
 		socket.emit('get_next', {
 			data: board.get_cells(),
 			width: cell.width,
-			height: cell.height
+			height: cell.height,
+			stamp: board.waiting
 		});
 		timing.start();
 	};
@@ -109,6 +134,7 @@ $(document).ready(function(){
 		});
 
 		board.set_live(0); // on randomize set 0 live
+		board.blink_live(0, 0);
 	};
 
 	board.change_live_dots = function(one_cell_value){
@@ -120,11 +146,7 @@ $(document).ready(function(){
 	};
 
 	board.recalculate_live_dots = function(){
-		var live_dots = $('.dot.live').length;
-
-		board.set_live_dots_number(live_dots);
-
-		return live_dots;
+		return $('.dot.live').length;
 	};
 
 	board.set_live_dots_number = function(live_dots){
@@ -132,15 +154,28 @@ $(document).ready(function(){
 	};
 
 	board.set_live = function(live){
-		live = board.beautify_number(live, $('#cellall').html().length);
+		board.blink_live($('#celllive').html() * 1, live * 1);
 
+		live = board.beautify_number(live, $('#cellall').html().length);
 		$('#celllive').html(live);
 
 		return live;
 	};
 
 	board.beautify_number = function(number, target_length){
-		return number.length < target_length ? board.beautify_number('0' + number, target_length) : number;
+		return (number + '').length < target_length ? board.beautify_number('0' + number, target_length) : number;
+	};
+
+	board.blink_live = function(old_number, new_number){
+		var colour = 'ffffff';
+
+		if(old_number < new_number){
+			colour = '00ff00';
+		}else if(old_number > new_number){
+			colour = 'ff0000';
+		}
+
+		$('#celllive').css('backgroundColor', '#' + colour);
 	};
 
 	board.check_max_live = function(new_number){
@@ -158,6 +193,10 @@ $(document).ready(function(){
 	};
 
 	board.receive = function(data){
+		if(data.stamp != board.waiting){
+			return;
+		}
+
 		if(!data.changed){
 			return $('.auto_stop').click();
 		}
