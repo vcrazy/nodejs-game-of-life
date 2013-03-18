@@ -1,0 +1,4 @@
+body {margin: 20px 0px 0px 20px;}
+#grid {margin: 0px; padding: 0px;}
+.dot {width: 48px; height: 48px; display: inline-block; border-radius: 4px; background-color: #ddd; border: 1px solid #222;}
+.dot.live {background: #777;}

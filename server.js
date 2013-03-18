@@ -1,6 +1,6 @@
 var app = require('http').createServer(),
 	io = require('socket.io').listen(app),
-	port = 80,
+	port = 9588,
 	width = 0,
 	height = 0,
 	data = '';
