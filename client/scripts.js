@@ -10,7 +10,7 @@ timing = {
 auto = false,
 interval = 120, // in ms
 
-socket = io.connect('http://game-of-life.jit.su/');
+socket = io.connect('http://141.0.170.38:9588/');
 
 $(document).ready(function(){
 // ACTIONS
